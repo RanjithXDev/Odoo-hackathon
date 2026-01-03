@@ -17,76 +17,16 @@
     transform: translateZ(0);
 }
 
+.btn:active {
+    transform: scale(0.98);
+}
+
 .btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-/* Variants */
-.btn-primary {
-    background: var(--gradient-primary);
-    color: white;
-    box-shadow: var(--shadow-md);
-}
-
-.btn-primary:hover:not(:disabled) {
-    box-shadow: var(--shadow-glow), 0 0 30px rgba(6, 182, 212, 0.4);
-    transform: translateY(-3px) scale(1.02);
-}
-
-.btn-primary:active:not(:disabled) {
-    transform: translateY(-1px) scale(0.98);
-    transition: all var(--transition-fast);
-}
-
-.btn-secondary {
-    background: var(--color-bg-elevated);
-    color: var(--color-text-primary);
-    border: 1px solid var(--color-border);
-}
-
-.btn-secondary:hover:not(:disabled) {
-    border-color: var(--color-primary);
-    background: var(--color-bg-tertiary);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-
-.btn-secondary:active:not(:disabled) {
-    transform: translateY(0);
-}
-
-.btn-ghost {
-    background: transparent;
-    color: var(--color-text-secondary);
-}
-
-.btn-ghost:hover:not(:disabled) {
-    background: var(--color-bg-elevated);
-    color: var(--color-primary);
-    transform: translateY(-1px);
-}
-
-.btn-ghost:active:not(:disabled) {
-    transform: translateY(0);
-}
-
-.btn-danger {
-    background: var(--color-error);
-    color: white;
-}
-
-.btn-danger:hover:not(:disabled) {
-    background: #dc2626;
-    box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
-    transform: translateY(-2px);
-}
-
-.btn-danger:active:not(:disabled) {
-    transform: translateY(0);
-}
-
-/* Sizes */
+/* Button Sizes */
 .btn-small {
     padding: var(--space-2) var(--space-4);
     font-size: var(--font-size-sm);
@@ -102,10 +42,85 @@
     font-size: var(--font-size-lg);
 }
 
+/* Button Variants */
+.btn-primary {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: var(--shadow-glow), 0 8px 25px rgba(14, 165, 233, 0.5);
+    filter: brightness(1.1);
+}
+
+.btn-secondary {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: var(--color-bg-elevated);
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-glass {
+    background: var(--color-glass-bg);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-glass-border);
+}
+
+.btn-glass:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
+}
+
+.btn-outline:hover:not(:disabled) {
+    background: rgba(14, 165, 233, 0.1);
+    box-shadow: 0 0 15px rgba(14, 165, 233, 0.2);
+    transform: translateY(-2px);
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--color-text-secondary);
+}
+
+.btn-ghost:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-primary);
+}
+
+.btn-danger {
+    background: var(--color-error);
+    color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+    filter: brightness(1.1);
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+    transform: translateY(-2px);
+}
+
 /* Loading State */
 .btn-loading {
     position: relative;
     color: transparent !important;
+    pointer-events: none;
 }
 
 .btn-spinner {
@@ -115,7 +130,26 @@
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-top-color: white;
     border-radius: 50%;
-    animation: spin 0.6s linear infinite;
+    animation: spin 0.8s linear infinite;
+}
+
+/* Premium Effects */
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.2),
+            transparent);
+    transition: 0.5s;
+}
+
+.btn-primary:hover::after {
+    left: 100%;
 }
 
 @keyframes spin {

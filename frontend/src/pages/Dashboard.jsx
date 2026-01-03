@@ -10,7 +10,10 @@ import {
     TrendingUp,
     Calendar,
     MapPin,
-    DollarSign
+    DollarSign,
+    Compass,
+    Plane,
+    ArrowRight
 } from 'lucide-react';
 import './Dashboard.css';
 
@@ -28,94 +31,80 @@ const Dashboard = () => {
     const fetchDashboardData = async () => {
         try {
             setLoading(true);
-
-            // Fetch all data in parallel
             const [tripsResponse, statsResponse, popularResponse] = await Promise.all([
                 tripAPI.getAll(),
                 userAPI.getStats(),
-                searchAPI.popular(4)
+                searchAPI.popular(6)
             ]);
 
-            // Set trips data
             if (tripsResponse.data.success) {
                 const trips = tripsResponse.data.trips || [];
-                // Filter upcoming trips
                 const upcoming = trips.filter(trip =>
                     new Date(trip.startDate) > new Date()
-                ).slice(0, 2);
+                ).slice(0, 3);
                 setUpcomingTrips(upcoming);
             }
 
-            // Set stats data
             if (statsResponse.data.success) {
-                const userStats = statsResponse.data.stats;
-                setStats({
-                    totalTrips: userStats.totalTrips || 0,
-                    upcomingTrips: userStats.upcomingTrips || 0,
-                    destinationsVisited: userStats.destinationsVisited || 0,
-                    totalBudget: userStats.totalBudget || 0
-                });
+                setStats(statsResponse.data.stats);
             }
 
-            // Set popular destinations
             if (popularResponse.data.success) {
                 setPopularDestinations(popularResponse.data.destinations || []);
             }
-
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
-            // Set default stats if API fails
-            setStats({
-                totalTrips: 0,
-                upcomingTrips: 0,
-                destinationsVisited: 0,
-                totalBudget: 0
-            });
+            setStats({ totalTrips: 0, upcomingTrips: 0, destinationsVisited: 0, totalBudget: 0 });
         } finally {
             setLoading(false);
         }
     };
 
-    const statsDisplay = stats ? [
-        { label: 'Total Trips', value: stats.totalTrips.toString(), icon: Map, color: 'primary' },
-        { label: 'Destinations', value: stats.destinationsVisited.toString(), icon: MapPin, color: 'secondary' },
-        { label: 'Total Budget', value: `₹${(stats.totalBudget / 1000).toFixed(1)}K`, icon: DollarSign, color: 'accent' },
-        { label: 'Upcoming', value: stats.upcomingTrips.toString(), icon: Calendar, color: 'success' }
-    ] : [];
-
     if (loading) {
         return (
             <div className="dashboard-container">
-                <div className="loading-state">
-                    <div className="spinner"></div>
-                    <p>Loading your dashboard...</p>
+                <div className="loading-state flex flex-col items-center justify-center p-20">
+                    <div className="spinner mb-4"></div>
+                    <p className="voyage-gradient-text font-bold text-xl">Calibrating your adventure radar...</p>
                 </div>
             </div>
         );
     }
 
+    const missionStats = [
+        { label: 'Expeditions', value: stats?.totalTrips || 0, icon: Plane, color: 'voyage' },
+        { label: 'Waypoints', value: stats?.destinationsVisited || 0, icon: MapPin, color: 'sunset' },
+        { label: 'Voyage Fund', value: `₹${((stats?.totalBudget || 0) / 1000).toFixed(1)}K`, icon: DollarSign, color: 'aurora' },
+        { label: 'On Horizon', value: stats?.upcomingTrips || 0, icon: Calendar, color: 'primary' }
+    ];
+
     return (
         <div className="dashboard-container">
-            <div className="dashboard-header animate-fadeInDown">
-                <div>
-                    <h1 className="page-title">Welcome back, {user?.name}! 👋</h1>
-                    <p className="page-subtitle">Ready to plan your next adventure?</p>
+            {/* Mission Hero */}
+            <header className="dashboard-hero">
+                <div className="hero-welcome">
+                    <h1 className="hero-title voyage-gradient-text">
+                        Captain {user?.name.split(' ')[0]}
+                    </h1>
+                    <p className="hero-subtitle">Your next global waypoint is waiting to be discovered.</p>
                 </div>
-                <Link to="/trips/create">
-                    <Button variant="primary" size="large" icon={PlusCircle}>
-                        Plan New Trip
-                    </Button>
-                </Link>
-            </div>
+                <div className="hero-actions">
+                    <Link to="/trips/create">
+                        <Button variant="primary" size="large" icon={PlusCircle}>
+                            Plot New Voyage
+                        </Button>
+                    </Link>
+                </div>
+            </header>
 
-            {/* Stats Grid */}
-            <div className="stats-grid animate-fadeInUp">
-                {statsDisplay.map((stat, index) => (
-                    <Card key={index} className="stat-card">
+            {/* Stats Mission Control */}
+            <div className="stats-grid">
+                {missionStats.map((stat, i) => (
+                    <Card key={i} className={`stat-card card-glass`}>
                         <div className={`stat-icon stat-icon-${stat.color}`}>
                             <stat.icon size={24} />
                         </div>
-                        <div className="stat-content">
+                        <div>
                             <p className="stat-label">{stat.label}</p>
                             <h3 className="stat-value">{stat.value}</h3>
                         </div>
@@ -123,91 +112,83 @@ const Dashboard = () => {
                 ))}
             </div>
 
-            {/* Upcoming Trips */}
-            <section className="dashboard-section animate-fadeInUp">
+            {/* Upcoming Expeditions */}
+            <section className="dashboard-section">
                 <div className="section-header">
-                    <h2 className="section-title">Upcoming Trips</h2>
-                    <Link to="/trips" className="link-primary">
-                        View all
+                    <h2 className="section-title">Current Horizon</h2>
+                    <Link to="/trips" className="link-primary flex items-center gap-2">
+                        Logbook <ArrowRight size={16} />
                     </Link>
                 </div>
 
                 {upcomingTrips.length > 0 ? (
                     <div className="trips-grid">
                         {upcomingTrips.map((trip) => (
-                            <Card key={trip._id} className="trip-card">
-                                <div className="trip-image-placeholder">
+                            <div key={trip._id} className="trip-card-premium card">
+                                <div className="trip-image-container">
                                     {trip.coverImage ? (
                                         <img src={`http://localhost:5000${trip.coverImage}`} alt={trip.name} />
                                     ) : (
-                                        <Map size={48} />
+                                        <div className="trip-placeholder-icon">
+                                            <Compass size={64} />
+                                        </div>
                                     )}
+                                    <div className="trip-image-overlay" />
                                 </div>
-                                <div className="trip-info">
-                                    <h3 className="trip-name">{trip.name}</h3>
-                                    <p className="trip-destination">
-                                        <MapPin size={16} />
-                                        {trip.destinations?.join(', ') || 'No destinations'}
-                                    </p>
-                                    <div className="trip-meta">
-                                        <span className="trip-dates">
-                                            <Calendar size={14} />
-                                            {new Date(trip.startDate).toLocaleDateString()} - {new Date(trip.endDate).toLocaleDateString()}
-                                        </span>
-                                        <span className="trip-budget">
-                                            <DollarSign size={14} />
-                                            ₹{trip.budget.toLocaleString('en-IN')}
-                                        </span>
+                                <div className="trip-content">
+                                    <span className="trip-badge">Next Adventure</span>
+                                    <h3 className="trip-title">{trip.name}</h3>
+                                    <div className="trip-meta-row">
+                                        <div className="trip-meta-item">
+                                            <MapPin size={14} /> <span>{trip.destinations?.[0] || 'Unknown'}</span>
+                                        </div>
+                                        <div className="trip-meta-item">
+                                            <Calendar size={14} /> <span>{new Date(trip.startDate).toLocaleDateString()}</span>
+                                        </div>
                                     </div>
+                                    <Link to={`/trips/${trip._id}`}>
+                                        <Button variant="glass" size="small" className="w-full">
+                                            Mission Intel
+                                        </Button>
+                                    </Link>
                                 </div>
-                                <Link to={`/trips/${trip._id}`}>
-                                    <Button variant="secondary" size="small" className="trip-action">
-                                        View Details
-                                    </Button>
-                                </Link>
-                            </Card>
+                            </div>
                         ))}
                     </div>
                 ) : (
-                    <div className="empty-state">
-                        <Map className="empty-state-icon" size={64} />
-                        <h3 className="empty-state-title">No upcoming trips</h3>
-                        <p className="empty-state-description">
-                            Start planning your next adventure today!
+                    <Card className="empty-state p-12 text-center card-voyage">
+                        <Compass className="voyage-gradient-text mx-auto mb-6" size={80} />
+                        <h3 className="text-2xl font-bold mb-2">No expeditions planned</h3>
+                        <p className="text-secondary mb-8 max-w-md mx-auto">
+                            Your mission log is empty. It's time to set coordinates for your next great journey.
                         </p>
                         <Link to="/trips/create">
-                            <Button variant="primary" icon={PlusCircle}>
-                                Create Your First Trip
-                            </Button>
+                            <Button variant="primary">Initialize First Mission</Button>
                         </Link>
-                    </div>
+                    </Card>
                 )}
             </section>
 
-            {/* Popular Destinations */}
-            <section className="dashboard-section animate-fadeInUp">
+            {/* Popular Waypoints */}
+            <section className="dashboard-section">
                 <div className="section-header">
-                    <h2 className="section-title">Popular Destinations</h2>
-                    <Link to="/search/cities" className="link-primary">
-                        Explore more
+                    <h2 className="section-title">Global Hotspots</h2>
+                    <Link to="/search/cities" className="link-primary flex items-center gap-2">
+                        Star Maps <ArrowRight size={16} />
                     </Link>
                 </div>
 
-                <div className="destinations-grid">
-                    {popularDestinations.map((dest, index) => (
-                        <Card key={index} className="destination-card">
-                            <div className="destination-icon">
-                                <MapPin size={24} />
+                <div className="destinations-row">
+                    {popularDestinations.map((dest, i) => (
+                        <div key={i} className="dest-pill">
+                            <div className="dest-icon-box">
+                                <MapPin size={20} className="text-primary" />
                             </div>
-                            <div className="destination-info">
-                                <h4 className="destination-name">{dest.name}</h4>
-                                <p className="destination-country">{dest.country}</p>
-                                <p className="destination-trips">
-                                    <TrendingUp size={14} />
-                                    {dest.trips} trips planned
-                                </p>
+                            <div>
+                                <h4 className="font-bold text-sm leading-tight">{dest.name}</h4>
+                                <p className="text-xs text-secondary">{dest.trips} active voyagers</p>
                             </div>
-                        </Card>
+                        </div>
                     ))}
                 </div>
             </section>

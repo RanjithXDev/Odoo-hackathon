@@ -4,7 +4,16 @@ import { tripAPI } from '../../services/api';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
-import { Calendar, FileText, Image as ImageIcon, ArrowRight } from 'lucide-react';
+import {
+    Calendar,
+    FileText,
+    Image as ImageIcon,
+    ArrowRight,
+    MapPin,
+    DollarSign,
+    Compass,
+    Plane
+} from 'lucide-react';
 import './CreateTrip.css';
 
 const CreateTrip = () => {
@@ -45,7 +54,6 @@ const CreateTrip = () => {
         setLoading(true);
 
         try {
-            // Create FormData for file upload
             const submitData = new FormData();
             submitData.append('name', formData.name);
             submitData.append('startDate', formData.startDate);
@@ -53,7 +61,6 @@ const CreateTrip = () => {
             submitData.append('description', formData.description || '');
             submitData.append('budget', formData.budget || 0);
 
-            // Parse destinations as array
             if (formData.destinations) {
                 const destinationsArray = formData.destinations.split(',').map(d => d.trim());
                 destinationsArray.forEach(dest => {
@@ -72,19 +79,19 @@ const CreateTrip = () => {
                 navigate(`/trips/${tripId}/itinerary`);
             }
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to create trip');
+            setError(err.response?.data?.message || 'Failed to initialize voyage');
             setLoading(false);
         }
     };
 
     return (
         <div className="create-trip-container">
-            <div className="page-header animate-fadeInDown">
-                <h1 className="page-title">Plan Your Next Adventure</h1>
-                <p className="page-subtitle">Let's start by creating your trip details</p>
-            </div>
+            <header className="page-header">
+                <h1 className="page-title voyage-gradient-text">Initialize New Voyage</h1>
+                <p className="page-subtitle">Plot your coordinates and set the mission parameters.</p>
+            </header>
 
-            <Card className="create-trip-card animate-fadeInUp">
+            <div className="create-trip-card animate-scaleIn">
                 <form onSubmit={handleSubmit} className="create-trip-form">
                     {error && (
                         <div className="error-banner animate-fadeInDown">
@@ -92,13 +99,15 @@ const CreateTrip = () => {
                         </div>
                     )}
 
-                    <div className="form-section">
-                        <h3 className="form-section-title">Trip Information</h3>
+                    <section className="form-section">
+                        <h3 className="form-section-title">
+                            <Compass size={24} /> Mission Identity
+                        </h3>
 
                         <Input
-                            label="Trip Name"
+                            label="Voyage Designation"
                             name="name"
-                            placeholder="e.g., European Summer Adventure"
+                            placeholder="e.g., Arctic Expedition 2026"
                             value={formData.name}
                             onChange={handleChange}
                             required
@@ -106,7 +115,7 @@ const CreateTrip = () => {
 
                         <div className="form-row">
                             <Input
-                                label="Start Date"
+                                label="Launch Date"
                                 name="startDate"
                                 type="date"
                                 value={formData.startDate}
@@ -115,7 +124,7 @@ const CreateTrip = () => {
                                 required
                             />
                             <Input
-                                label="End Date"
+                                label="Return Date"
                                 name="endDate"
                                 type="date"
                                 value={formData.endDate}
@@ -125,45 +134,47 @@ const CreateTrip = () => {
                             />
                         </div>
 
-                        <Input
-                            label="Destinations"
-                            name="destinations"
-                            placeholder="e.g., Paris, Rome, Barcelona"
-                            value={formData.destinations}
-                            onChange={handleChange}
-                        />
-
-                        <Input
-                            label="Budget (USD)"
-                            name="budget"
-                            type="number"
-                            placeholder="e.g., 3500"
-                            value={formData.budget}
-                            onChange={handleChange}
-                        />
+                        <div className="form-row">
+                            <Input
+                                label="Target Sectors (Destinations)"
+                                name="destinations"
+                                placeholder="Paris, Tokyo, Mars..."
+                                value={formData.destinations}
+                                onChange={handleChange}
+                                icon={MapPin}
+                            />
+                            <Input
+                                label="Budget Allocation (₹)"
+                                name="budget"
+                                type="number"
+                                placeholder="Resource limit"
+                                value={formData.budget}
+                                onChange={handleChange}
+                                icon={DollarSign}
+                            />
+                        </div>
 
                         <div className="input-group">
-                            <label className="input-label">
-                                Description
-                            </label>
+                            <label className="input-label">Mission Objectives (Description)</label>
                             <textarea
                                 name="description"
                                 className="input textarea"
-                                placeholder="Describe your trip plans..."
+                                placeholder="Summary of the planned itinerary and goals..."
                                 value={formData.description}
                                 onChange={handleChange}
-                                rows="4"
                             />
                         </div>
-                    </div>
+                    </section>
 
-                    <div className="form-section">
-                        <h3 className="form-section-title">Cover Photo (Optional)</h3>
+                    <section className="form-section">
+                        <h3 className="form-section-title">
+                            <Plane size={24} /> Visual Reconnaissance
+                        </h3>
 
                         <div className="image-upload-area">
                             {imagePreview ? (
                                 <div className="image-preview">
-                                    <img src={imagePreview} alt="Cover preview" />
+                                    <img src={imagePreview} alt="Mission preview" />
                                     <button
                                         type="button"
                                         className="remove-image"
@@ -172,13 +183,14 @@ const CreateTrip = () => {
                                             setFormData(prev => ({ ...prev, coverImage: null }));
                                         }}
                                     >
-                                        Remove
+                                        Scrap Image
                                     </button>
                                 </div>
                             ) : (
                                 <label className="image-upload-label">
-                                    <ImageIcon size={48} />
-                                    <p>Click to upload cover photo</p>
+                                    <ImageIcon size={64} />
+                                    <p className="font-bold">Identify Mission Cover</p>
+                                    <p className="text-xs text-secondary mt-1">Click to upload satellite imagery or photos</p>
                                     <input
                                         type="file"
                                         accept="image/*"
@@ -188,15 +200,15 @@ const CreateTrip = () => {
                                 </label>
                             )}
                         </div>
-                    </div>
+                    </section>
 
-                    <div className="form-actions">
+                    <footer className="form-actions">
                         <Button
                             type="button"
                             variant="ghost"
-                            onClick={() => navigate('/trips')}
+                            onClick={() => navigate('/app')}
                         >
-                            Cancel
+                            Abort Mission
                         </Button>
                         <Button
                             type="submit"
@@ -205,11 +217,11 @@ const CreateTrip = () => {
                             icon={ArrowRight}
                             loading={loading}
                         >
-                            Continue to Itinerary
+                            Confirm & Plot Route
                         </Button>
-                    </div>
+                    </footer>
                 </form>
-            </Card>
+            </div>
         </div>
     );
 };
