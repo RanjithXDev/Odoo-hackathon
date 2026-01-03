@@ -14,7 +14,7 @@ const TripDetails = () => {
         destinations: ['Paris', 'Rome', 'Barcelona'],
         startDate: '2026-03-15',
         endDate: '2026-03-25',
-        budget: 3500,
+        budget: 290000,
         description: 'An amazing journey through Europe visiting iconic cities and experiencing diverse cultures.',
         stops: 3
     };
@@ -56,7 +56,7 @@ const TripDetails = () => {
                             <DollarSign size={20} />
                             <div>
                                 <p className="info-label">Budget</p>
-                                <p className="info-value">${trip.budget}</p>
+                                <p className="info-value">₹{trip.budget.toLocaleString('en-IN')}</p>
                             </div>
                         </div>
                     </div>

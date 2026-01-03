@@ -14,7 +14,7 @@ const MyTrips = () => {
             destinations: ['Paris', 'Rome', 'Barcelona'],
             startDate: '2026-03-15',
             endDate: '2026-03-25',
-            budget: 3500,
+            budget: 290000,
             stops: 3,
             image: null
         },
@@ -24,17 +24,17 @@ const MyTrips = () => {
             destinations: ['Bangkok', 'Singapore', 'Bali'],
             startDate: '2026-06-10',
             endDate: '2026-06-24',
-            budget: 2800,
+            budget: 232000,
             stops: 3,
             image: null
         },
         {
             id: 3,
-            name: 'USA Road Trip',
-            destinations: ['New York', 'Chicago', 'Los Angeles'],
+            name: 'India Road Trip',
+            destinations: ['Delhi', 'Jaipur', 'Agra'],
             startDate: '2026-08-01',
             endDate: '2026-08-15',
-            budget: 4200,
+            budget: 85000,
             stops: 3,
             image: null
         }
@@ -85,7 +85,7 @@ const MyTrips = () => {
                                     </span>
                                     <span className="meta-item">
                                         <DollarSign size={16} />
-                                        ${trip.budget}
+                                        ₹{trip.budget.toLocaleString('en-IN')}
                                     </span>
                                 </div>
 

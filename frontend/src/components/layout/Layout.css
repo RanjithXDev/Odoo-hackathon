@@ -1,12 +1,14 @@
 .layout-container {
     min-height: 100vh;
     background: var(--color-bg-primary);
+    transition: background var(--theme-transition);
 }
 
 .layout-main {
     display: flex;
     padding-top: 70px;
     /* Height of navbar */
+    animation: fadeIn 0.5s ease-out;
 }
 
 .layout-content {
@@ -14,7 +16,8 @@
     margin-left: 260px;
     /* Width of sidebar */
     padding: var(--space-8);
-    transition: margin-left var(--transition-base);
+    transition: margin-left var(--transition-base), padding var(--transition-base);
+    animation: fadeInUp 0.6s ease-out;
 }
 
 @media (max-width: 1024px) {

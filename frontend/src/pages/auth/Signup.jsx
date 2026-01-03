@@ -40,7 +40,7 @@ const Signup = () => {
         setLoading(false);
 
         if (result.success) {
-            navigate('/dashboard');
+            navigate('/app');
         } else {
             setError(result.error || 'Signup failed');
         }

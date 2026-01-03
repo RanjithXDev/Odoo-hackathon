@@ -23,7 +23,7 @@ const Dashboard = () => {
             destination: 'Paris, Rome, Barcelona',
             startDate: '2026-03-15',
             endDate: '2026-03-25',
-            budget: 3500,
+            budget: 290000,
             image: null
         },
         {
@@ -32,22 +32,22 @@ const Dashboard = () => {
             destination: 'Bangkok, Singapore, Bali',
             startDate: '2026-06-10',
             endDate: '2026-06-24',
-            budget: 2800,
+            budget: 232000,
             image: null
         }
     ];
 
     const popularDestinations = [
-        { name: 'Paris', country: 'France', trips: 1250 },
-        { name: 'Tokyo', country: 'Japan', trips: 980 },
-        { name: 'New York', country: 'USA', trips: 1100 },
+        { name: 'Goa', country: 'India', trips: 1250 },
+        { name: 'Dubai', country: 'UAE', trips: 980 },
+        { name: 'Singapore', country: 'Singapore', trips: 1100 },
         { name: 'Bali', country: 'Indonesia', trips: 850 }
     ];
 
     const stats = [
         { label: 'Total Trips', value: '12', icon: Map, color: 'primary' },
         { label: 'Countries Visited', value: '8', icon: MapPin, color: 'secondary' },
-        { label: 'Total Budget', value: '$15.2K', icon: DollarSign, color: 'accent' },
+        { label: 'Total Budget', value: '₹12.6L', icon: DollarSign, color: 'accent' },
         { label: 'Upcoming', value: '2', icon: Calendar, color: 'success' }
     ];
 
@@ -109,7 +109,7 @@ const Dashboard = () => {
                                         </span>
                                         <span className="trip-budget">
                                             <DollarSign size={14} />
-                                            ${trip.budget}
+                                            ₹{trip.budget.toLocaleString('en-IN')}
                                         </span>
                                     </div>
                                 </div>

@@ -12,11 +12,11 @@ import './Sidebar.css';
 
 const Sidebar = () => {
     const navItems = [
-        { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-        { to: '/trips', icon: Map, label: 'My Trips' },
-        { to: '/trips/create', icon: PlusCircle, label: 'Plan New Trip' },
-        { to: '/search/cities', icon: Search, label: 'Explore Cities' },
-        { to: '/profile', icon: User, label: 'Profile' },
+        { to: '/app/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+        { to: '/app/trips', icon: Map, label: 'My Trips' },
+        { to: '/app/trips/create', icon: PlusCircle, label: 'Plan New Trip' },
+        { to: '/app/search/cities', icon: Search, label: 'Explore Cities' },
+        { to: '/app/profile', icon: User, label: 'Profile' },
     ];
 
     return (
