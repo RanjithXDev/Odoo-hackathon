@@ -1,0 +1,21 @@
+.public-itinerary-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-8);
+}
+
+.public-header {
+    text-align: center;
+    margin-bottom: var(--space-8);
+}
+
+.public-actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+}
+
+.public-content {
+    min-height: 400px;
+}

@@ -1,0 +1,64 @@
+.city-search-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.search-card {
+    margin-bottom: var(--space-8);
+}
+
+.cities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-6);
+}
+
+.city-card {
+    text-align: center;
+    padding: var(--space-8) var(--space-6);
+}
+
+.city-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--space-4);
+    background: var(--gradient-primary);
+    border-radius: var(--radius-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.city-name {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.city-country {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-4);
+}
+
+.city-meta {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-4);
+    font-size: var(--font-size-sm);
+}
+
+.cost-badge {
+    padding: var(--space-1) var(--space-3);
+    background: var(--color-bg-elevated);
+    border-radius: var(--radius-full);
+    color: var(--color-primary);
+}
+
+.popularity {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--color-text-tertiary);
+}

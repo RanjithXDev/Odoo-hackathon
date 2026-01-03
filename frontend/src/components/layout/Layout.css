@@ -1,0 +1,25 @@
+.layout-container {
+    min-height: 100vh;
+    background: var(--color-bg-primary);
+}
+
+.layout-main {
+    display: flex;
+    padding-top: 70px;
+    /* Height of navbar */
+}
+
+.layout-content {
+    flex: 1;
+    margin-left: 260px;
+    /* Width of sidebar */
+    padding: var(--space-8);
+    transition: margin-left var(--transition-base);
+}
+
+@media (max-width: 1024px) {
+    .layout-content {
+        margin-left: 0;
+        padding: var(--space-4);
+    }
+}
