@@ -1,0 +1,106 @@
+.theme-toggle {
+    position: relative;
+    width: 56px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    outline: none;
+    transition: all var(--transition-base);
+}
+
+.theme-toggle-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: var(--color-bg-tertiary);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-full);
+    transition: all var(--transition-base);
+    overflow: hidden;
+}
+
+.theme-toggle-track::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.theme-toggle:hover .theme-toggle-track {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+}
+
+.theme-toggle:hover .theme-toggle-track::before {
+    opacity: 0.2;
+}
+
+.theme-toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 24px;
+    height: 24px;
+    background: var(--color-bg-elevated);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--transition-slow) cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-md);
+    z-index: 1;
+}
+
+.theme-toggle.light .theme-toggle-thumb {
+    transform: translateX(24px);
+}
+
+.theme-toggle.dark .theme-toggle-thumb {
+    transform: translateX(0);
+}
+
+.theme-icon {
+    color: var(--color-primary);
+    transition: transform var(--transition-base), color var(--transition-base);
+}
+
+.theme-toggle:hover .theme-icon {
+    transform: rotate(15deg) scale(1.1);
+}
+
+.theme-toggle:active .theme-toggle-thumb {
+    transform: scale(0.95);
+}
+
+.theme-toggle.light:active .theme-toggle-thumb {
+    transform: translateX(24px) scale(0.95);
+}
+
+.theme-toggle.dark:active .theme-toggle-thumb {
+    transform: translateX(0) scale(0.95);
+}
+
+/* Smooth theme transition animation */
+@keyframes themeSwitch {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.theme-toggle:active .theme-toggle-thumb {
+    animation: themeSwitch 0.3s ease-out;
+}
+

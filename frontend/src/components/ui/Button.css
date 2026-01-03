@@ -8,10 +8,13 @@
     border: none;
     border-radius: var(--radius-lg);
     cursor: pointer;
-    transition: all var(--transition-base);
+    transition: all var(--transition-slow) cubic-bezier(0.4, 0, 0.2, 1);
     outline: none;
     text-decoration: none;
     white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    transform: translateZ(0);
 }
 
 .btn:disabled {
@@ -27,8 +30,13 @@
 }
 
 .btn-primary:hover:not(:disabled) {
-    box-shadow: var(--shadow-glow);
-    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow), 0 0 30px rgba(6, 182, 212, 0.4);
+    transform: translateY(-3px) scale(1.02);
+}
+
+.btn-primary:active:not(:disabled) {
+    transform: translateY(-1px) scale(0.98);
+    transition: all var(--transition-fast);
 }
 
 .btn-secondary {
@@ -40,6 +48,12 @@
 .btn-secondary:hover:not(:disabled) {
     border-color: var(--color-primary);
     background: var(--color-bg-tertiary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-secondary:active:not(:disabled) {
+    transform: translateY(0);
 }
 
 .btn-ghost {
@@ -50,6 +64,11 @@
 .btn-ghost:hover:not(:disabled) {
     background: var(--color-bg-elevated);
     color: var(--color-primary);
+    transform: translateY(-1px);
+}
+
+.btn-ghost:active:not(:disabled) {
+    transform: translateY(0);
 }
 
 .btn-danger {
@@ -60,6 +79,11 @@
 .btn-danger:hover:not(:disabled) {
     background: #dc2626;
     box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-danger:active:not(:disabled) {
+    transform: translateY(0);
 }
 
 /* Sizes */

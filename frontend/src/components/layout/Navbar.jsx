@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Menu, X, User, LogOut, Globe } from 'lucide-react';
 import { useState } from 'react';
+import ThemeToggle from '../ui/ThemeToggle';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -18,6 +19,7 @@ const Navbar = () => {
                 </Link>
 
                 <div className="navbar-actions">
+                    <ThemeToggle />
                     <div className="user-menu-container">
                         <button
                             className="user-menu-trigger"

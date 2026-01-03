@@ -7,10 +7,10 @@ const BudgetBreakdown = () => {
     const { tripId } = useParams();
 
     const budgetData = [
-        { name: 'Transport', value: 800, color: '#06b6d4' },
-        { name: 'Accommodation', value: 1200, color: '#8b5cf6' },
-        { name: 'Activities', value: 900, color: '#f59e0b' },
-        { name: 'Food', value: 600, color: '#10b981' }
+        { name: 'Transport', value: 66000, color: '#06b6d4' },
+        { name: 'Accommodation', value: 99000, color: '#8b5cf6' },
+        { name: 'Activities', value: 74000, color: '#f59e0b' },
+        { name: 'Food', value: 50000, color: '#10b981' }
     ];
 
     const total = budgetData.reduce((sum, item) => sum + item.value, 0);
@@ -49,7 +49,7 @@ const BudgetBreakdown = () => {
                     <h3>Summary</h3>
                     <div className="budget-total">
                         <span>Total Budget</span>
-                        <span className="total-amount">${total}</span>
+                        <span className="total-amount">₹{total.toLocaleString('en-IN')}</span>
                     </div>
                     <div className="budget-items">
                         {budgetData.map((item, index) => (
@@ -58,7 +58,7 @@ const BudgetBreakdown = () => {
                                     <div className="item-color" style={{ background: item.color }}></div>
                                     <span>{item.name}</span>
                                 </div>
-                                <span className="item-amount">${item.value}</span>
+                                <span className="item-amount">₹{item.value.toLocaleString('en-IN')}</span>
                             </div>
                         ))}
                     </div>

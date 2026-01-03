@@ -8,10 +8,14 @@ const CitySearch = () => {
     const [searchQuery, setSearchQuery] = useState('');
 
     const cities = [
-        { name: 'Paris', country: 'France', costIndex: 'High', popularity: 1250 },
-        { name: 'Tokyo', country: 'Japan', costIndex: 'High', popularity: 980 },
+        { name: 'Goa', country: 'India', costIndex: 'Low', popularity: 1250 },
+        { name: 'Dubai', country: 'UAE', costIndex: 'High', popularity: 980 },
         { name: 'Bali', country: 'Indonesia', costIndex: 'Medium', popularity: 850 },
-        { name: 'Bangkok', country: 'Thailand', costIndex: 'Low', popularity: 920 }
+        { name: 'Bangkok', country: 'Thailand', costIndex: 'Low', popularity: 920 },
+        { name: 'Jaipur', country: 'India', costIndex: 'Low', popularity: 1100 },
+        { name: 'Singapore', country: 'Singapore', costIndex: 'High', popularity: 890 },
+        { name: 'Maldives', country: 'Maldives', costIndex: 'High', popularity: 750 },
+        { name: 'Manali', country: 'India', costIndex: 'Low', popularity: 980 }
     ];
 
     return (

@@ -79,7 +79,7 @@ const Dashboard = () => {
     const statsDisplay = stats ? [
         { label: 'Total Trips', value: stats.totalTrips.toString(), icon: Map, color: 'primary' },
         { label: 'Destinations', value: stats.destinationsVisited.toString(), icon: MapPin, color: 'secondary' },
-        { label: 'Total Budget', value: `$${(stats.totalBudget / 1000).toFixed(1)}K`, icon: DollarSign, color: 'accent' },
+        { label: 'Total Budget', value: `₹${(stats.totalBudget / 1000).toFixed(1)}K`, icon: DollarSign, color: 'accent' },
         { label: 'Upcoming', value: stats.upcomingTrips.toString(), icon: Calendar, color: 'success' }
     ] : [];
 
@@ -156,7 +156,7 @@ const Dashboard = () => {
                                         </span>
                                         <span className="trip-budget">
                                             <DollarSign size={14} />
-                                            ${trip.budget}
+                                            ₹{trip.budget.toLocaleString('en-IN')}
                                         </span>
                                     </div>
                                 </div>
