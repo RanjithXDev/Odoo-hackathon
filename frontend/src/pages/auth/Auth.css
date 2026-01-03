@@ -6,43 +6,126 @@
     padding: var(--space-6);
     position: relative;
     overflow: hidden;
+    background: #0f172a;
+    /* Deep night sky base */
 }
 
-.auth-background {
+/* Premium Travel Background */
+.auth-background-wrapper {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background:
-        radial-gradient(circle at 20% 30%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.1) 0%, transparent 70%);
-    animation: backgroundShift 15s ease-in-out infinite;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    perspective: 1000px;
 }
 
-@keyframes backgroundShift {
-
-    0%,
-    100% {
-        transform: scale(1) rotate(0deg);
-    }
-
-    50% {
-        transform: scale(1.1) rotate(5deg);
-    }
+.auth-background-sky {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg,
+            #1e293b 0%,
+            #334155 30%,
+            #94a3b8 60%,
+            #fdba74 85%,
+            #f97316 100%);
+    /* Golden Hour Gradient */
+    animation: skyShift 20s infinite alternate ease-in-out;
 }
 
+.sun {
+    position: absolute;
+    bottom: 10%;
+    left: 15%;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, #fef3c7 0%, #f59e0b 50%, transparent 100%);
+    border-radius: 50%;
+    filter: blur(20px);
+    opacity: 0.6;
+    animation: sunPulse 8s infinite alternate ease-in-out;
+}
+
+.cloud {
+    position: absolute;
+    opacity: 0.4;
+    filter: blur(4px);
+    animation: float var(--duration) infinite linear;
+}
+
+.cloud-1 {
+    top: 10%;
+    left: -20%;
+    --duration: 60s;
+}
+
+.cloud-2 {
+    top: 25%;
+    left: -30%;
+    --duration: 80s;
+}
+
+.cloud-3 {
+    top: 40%;
+    left: -25%;
+    --duration: 70s;
+}
+
+.plane-path {
+    position: absolute;
+    top: 20%;
+    right: -10%;
+    width: 200px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(-15deg);
+}
+
+.plane {
+    position: absolute;
+    top: -10px;
+    animation: planeFly 15s infinite linear;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Glassmorphism Auth Card */
 .auth-content {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     width: 100%;
-    max-width: 480px;
+    max-width: 440px;
+    transition: transform 0.3s ease-out;
 }
 
 .auth-card {
     padding: var(--space-10);
-    border-radius: var(--radius-2xl);
+    border-radius: 32px;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+        0 25px 50px -12px rgba(0, 0, 0, 0.5),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.05),
+            transparent);
+    transition: 0.5s;
+}
+
+.auth-card:hover::before {
+    left: 100%;
 }
 
 .auth-header {
@@ -54,38 +137,58 @@
     display: flex;
     justify-content: center;
     margin-bottom: var(--space-4);
+    position: relative;
+}
+
+.logo-wrapper {
+    background: var(--gradient-primary);
+    padding: var(--space-4);
+    border-radius: 20px;
+    box-shadow: var(--shadow-glow);
+    animation: logoFloat 3s infinite ease-in-out;
 }
 
 .logo-icon {
-    color: var(--color-primary);
-    animation: glow 2s ease-in-out infinite;
+    color: white;
 }
 
 .auth-title {
     font-size: var(--font-size-3xl);
-    font-weight: var(--font-weight-extrabold);
+    font-weight: 800;
     margin-bottom: var(--space-2);
+    letter-spacing: -0.025em;
+    background: linear-gradient(to bottom right, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .auth-subtitle {
     color: var(--color-text-secondary);
-    font-size: var(--font-size-base);
+    font-weight: 500;
 }
 
+/* Form Interactivity */
 .auth-form {
     display: flex;
     flex-direction: column;
-    gap: var(--space-5);
+    gap: var(--space-6);
+}
+
+.input-group:focus-within .input-label {
+    color: var(--color-primary);
+    transform: translateY(-2px);
 }
 
 .error-banner {
-    padding: var(--space-3) var(--space-4);
+    padding: var(--space-4);
     background: rgba(239, 68, 68, 0.1);
-    border: 1px solid var(--color-error);
-    border-radius: var(--radius-md);
-    color: var(--color-error);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: var(--radius-xl);
+    color: #f87171;
     font-size: var(--font-size-sm);
     text-align: center;
+    backdrop-filter: blur(4px);
 }
 
 .auth-options {
@@ -95,53 +198,200 @@
     font-size: var(--font-size-sm);
 }
 
-.auth-terms {
-    font-size: var(--font-size-sm);
-}
-
 .checkbox-label {
     display: flex;
     align-items: center;
     gap: var(--space-2);
     color: var(--color-text-secondary);
     cursor: pointer;
+    transition: color 0.2s;
+}
+
+.checkbox-label:hover {
+    color: var(--color-text-primary);
 }
 
 .checkbox-label input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
     cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.checkbox-label input[type="checkbox"]:checked {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.checkbox-label input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
 }
 
 .link-primary {
     color: var(--color-primary);
-    text-decoration: none;
-    transition: color var(--transition-fast);
+    font-weight: 600;
+    transition: all 0.2s;
 }
 
 .link-primary:hover {
     color: var(--color-primary-light);
-    text-decoration: underline;
+    text-shadow: 0 0 8px rgba(34, 211, 238, 0.4);
 }
 
 .auth-submit {
     width: 100%;
-    margin-top: var(--space-2);
+    height: 52px;
+    font-weight: 700;
+    letter-spacing: 0.025em;
+    border-radius: 16px;
+    background: var(--gradient-primary);
+    box-shadow: 0 10px 15px -3px rgba(6, 182, 212, 0.4);
+}
+
+.auth-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba(6, 182, 212, 0.5);
 }
 
 .auth-footer {
-    margin-top: var(--space-6);
+    margin-top: var(--space-8);
     text-align: center;
     color: var(--color-text-secondary);
-    font-size: var(--font-size-sm);
 }
 
+/* Animations */
+@keyframes skyShift {
+    0% {
+        filter: contrast(100%) brightness(100%);
+    }
+
+    100% {
+        filter: contrast(110%) brightness(105%);
+    }
+}
+
+@keyframes sunPulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+}
+
+@keyframes float {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(100vw);
+    }
+}
+
+@keyframes planeFly {
+    0% {
+        transform: translate(-100px, 0) rotate(-15deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(1200px, -300px) rotate(-15deg);
+        opacity: 0;
+    }
+}
+
+@keyframes logoFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Floating Icons */
+.floating-icons {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.float-icon {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.15);
+    filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.3));
+    animation: iconFloat infinite ease-in-out;
+}
+
+.icon-1 {
+    top: 15%;
+    left: 10%;
+    color: rgba(6, 182, 212, 0.3);
+    animation-duration: 6s;
+}
+
+.icon-2 {
+    bottom: 20%;
+    right: 15%;
+    color: rgba(245, 158, 11, 0.3);
+    animation-duration: 8s;
+    animation-delay: -2s;
+}
+
+@keyframes iconFloat {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    33% {
+        transform: translate(15px, -20px) rotate(10deg);
+    }
+
+    66% {
+        transform: translate(-10px, 10px) rotate(-10deg);
+    }
+}
+
+/* Mobile Adjustments */
 @media (max-width: 640px) {
     .auth-card {
-        padding: var(--space-6);
+        padding: var(--space-8) var(--space-6);
+        border-radius: 24px;
     }
 
     .auth-title {
         font-size: var(--font-size-2xl);
+    }
+
+    .floating-icons {
+        display: none;
     }
 }
