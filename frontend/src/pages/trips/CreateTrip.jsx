@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { tripAPI } from '../../services/api';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
@@ -13,9 +14,12 @@ const CreateTrip = () => {
         startDate: '',
         endDate: '',
         description: '',
+        destinations: '',
+        budget: '',
         coverImage: null
     });
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
     const [imagePreview, setImagePreview] = useState(null);
 
     const handleChange = (e) => {
@@ -37,13 +41,40 @@ const CreateTrip = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
         setLoading(true);
 
-        // TODO: Replace with actual API call
-        setTimeout(() => {
-            const tripId = Date.now();
-            navigate(`/trips/${tripId}/itinerary`);
-        }, 1000);
+        try {
+            // Create FormData for file upload
+            const submitData = new FormData();
+            submitData.append('name', formData.name);
+            submitData.append('startDate', formData.startDate);
+            submitData.append('endDate', formData.endDate);
+            submitData.append('description', formData.description || '');
+            submitData.append('budget', formData.budget || 0);
+
+            // Parse destinations as array
+            if (formData.destinations) {
+                const destinationsArray = formData.destinations.split(',').map(d => d.trim());
+                destinationsArray.forEach(dest => {
+                    submitData.append('destinations', dest);
+                });
+            }
+
+            if (formData.coverImage) {
+                submitData.append('coverImage', formData.coverImage);
+            }
+
+            const response = await tripAPI.create(submitData);
+
+            if (response.data.success) {
+                const tripId = response.data.trip._id;
+                navigate(`/trips/${tripId}/itinerary`);
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to create trip');
+            setLoading(false);
+        }
     };
 
     return (
@@ -55,6 +86,12 @@ const CreateTrip = () => {
 
             <Card className="create-trip-card animate-fadeInUp">
                 <form onSubmit={handleSubmit} className="create-trip-form">
+                    {error && (
+                        <div className="error-banner animate-fadeInDown">
+                            {error}
+                        </div>
+                    )}
+
                     <div className="form-section">
                         <h3 className="form-section-title">Trip Information</h3>
 
@@ -87,6 +124,23 @@ const CreateTrip = () => {
                                 required
                             />
                         </div>
+
+                        <Input
+                            label="Destinations"
+                            name="destinations"
+                            placeholder="e.g., Paris, Rome, Barcelona"
+                            value={formData.destinations}
+                            onChange={handleChange}
+                        />
+
+                        <Input
+                            label="Budget (USD)"
+                            name="budget"
+                            type="number"
+                            placeholder="e.g., 3500"
+                            value={formData.budget}
+                            onChange={handleChange}
+                        />
 
                         <div className="input-group">
                             <label className="input-label">

@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { authAPI } from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -21,66 +22,114 @@ export const AuthProvider = ({ children }) => {
 
         if (storedUser && token) {
             setUser(JSON.parse(storedUser));
+            // Optionally verify token with backend
+            verifyToken();
+        } else {
+            setLoading(false);
         }
-        setLoading(false);
     }, []);
+
+    const verifyToken = async () => {
+        try {
+            const response = await authAPI.getMe();
+            if (response.data.success) {
+                setUser(response.data.user);
+            }
+        } catch (error) {
+            console.error('Token verification failed:', error);
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            setUser(null);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const login = async (email, password) => {
         try {
-            // TODO: Replace with actual API call
-            // Mock login for now
-            const mockUser = {
-                id: '1',
-                name: 'Travel Enthusiast',
-                email: email,
-                avatar: null
-            };
+            const response = await authAPI.login({ email, password });
 
-            const mockToken = 'mock-jwt-token-' + Date.now();
+            if (response.data.success) {
+                const { token, user } = response.data;
+                localStorage.setItem('user', JSON.stringify(user));
+                localStorage.setItem('token', token);
+                setUser(user);
+                return { success: true, user };
+            }
 
-            localStorage.setItem('user', JSON.stringify(mockUser));
-            localStorage.setItem('token', mockToken);
-            setUser(mockUser);
-
-            return { success: true, user: mockUser };
+            return { success: false, error: 'Login failed' };
         } catch (error) {
-            return { success: false, error: error.message };
+            const message = error.response?.data?.message || error.message || 'Login failed';
+            return { success: false, error: message };
         }
     };
 
-    const signup = async (name, email, password) => {
+    const signup = async (name, email, password, contactNumber) => {
         try {
-            // TODO: Replace with actual API call
-            // Mock signup for now
-            const mockUser = {
-                id: Date.now().toString(),
-                name: name,
-                email: email,
-                avatar: null
-            };
+            const response = await authAPI.signup({
+                name,
+                email,
+                password,
+                contactNumber
+            });
 
-            const mockToken = 'mock-jwt-token-' + Date.now();
+            if (response.data.success) {
+                const { token, user } = response.data;
+                localStorage.setItem('user', JSON.stringify(user));
+                localStorage.setItem('token', token);
+                setUser(user);
+                return { success: true, user };
+            }
 
-            localStorage.setItem('user', JSON.stringify(mockUser));
-            localStorage.setItem('token', mockToken);
-            setUser(mockUser);
-
-            return { success: true, user: mockUser };
+            return { success: false, error: 'Signup failed' };
         } catch (error) {
-            return { success: false, error: error.message };
+            const message = error.response?.data?.message || error.message || 'Signup failed';
+            return { success: false, error: message };
         }
     };
 
-    const logout = () => {
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        setUser(null);
+    const logout = async () => {
+        try {
+            await authAPI.logout();
+        } catch (error) {
+            console.error('Logout error:', error);
+        } finally {
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            setUser(null);
+        }
     };
 
     const updateUser = (updatedData) => {
         const updatedUser = { ...user, ...updatedData };
         localStorage.setItem('user', JSON.stringify(updatedUser));
         setUser(updatedUser);
+    };
+
+    const forgotPassword = async (email) => {
+        try {
+            const response = await authAPI.forgotPassword(email);
+            return {
+                success: response.data.success,
+                message: response.data.message
+            };
+        } catch (error) {
+            const message = error.response?.data?.message || 'Failed to send reset email';
+            return { success: false, error: message };
+        }
+    };
+
+    const resetPassword = async (token, password) => {
+        try {
+            const response = await authAPI.resetPassword(token, password);
+            return {
+                success: response.data.success,
+                message: response.data.message
+            };
+        } catch (error) {
+            const message = error.response?.data?.message || 'Failed to reset password';
+            return { success: false, error: message };
+        }
     };
 
     const value = {
@@ -90,6 +139,8 @@ export const AuthProvider = ({ children }) => {
         signup,
         logout,
         updateUser,
+        forgotPassword,
+        resetPassword,
         isAuthenticated: !!user
     };
 

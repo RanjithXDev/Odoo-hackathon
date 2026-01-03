@@ -1,5 +1,7 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { tripAPI, userAPI, searchAPI } from '../services/api';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import {
@@ -14,42 +16,83 @@ import './Dashboard.css';
 
 const Dashboard = () => {
     const { user } = useAuth();
+    const [upcomingTrips, setUpcomingTrips] = useState([]);
+    const [popularDestinations, setPopularDestinations] = useState([]);
+    const [stats, setStats] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    // Mock data - will be replaced with API calls
-    const upcomingTrips = [
-        {
-            id: 1,
-            name: 'European Adventure',
-            destination: 'Paris, Rome, Barcelona',
-            startDate: '2026-03-15',
-            endDate: '2026-03-25',
-            budget: 3500,
-            image: null
-        },
-        {
-            id: 2,
-            name: 'Southeast Asia Explorer',
-            destination: 'Bangkok, Singapore, Bali',
-            startDate: '2026-06-10',
-            endDate: '2026-06-24',
-            budget: 2800,
-            image: null
+    useEffect(() => {
+        fetchDashboardData();
+    }, []);
+
+    const fetchDashboardData = async () => {
+        try {
+            setLoading(true);
+
+            // Fetch all data in parallel
+            const [tripsResponse, statsResponse, popularResponse] = await Promise.all([
+                tripAPI.getAll(),
+                userAPI.getStats(),
+                searchAPI.popular(4)
+            ]);
+
+            // Set trips data
+            if (tripsResponse.data.success) {
+                const trips = tripsResponse.data.trips || [];
+                // Filter upcoming trips
+                const upcoming = trips.filter(trip =>
+                    new Date(trip.startDate) > new Date()
+                ).slice(0, 2);
+                setUpcomingTrips(upcoming);
+            }
+
+            // Set stats data
+            if (statsResponse.data.success) {
+                const userStats = statsResponse.data.stats;
+                setStats({
+                    totalTrips: userStats.totalTrips || 0,
+                    upcomingTrips: userStats.upcomingTrips || 0,
+                    destinationsVisited: userStats.destinationsVisited || 0,
+                    totalBudget: userStats.totalBudget || 0
+                });
+            }
+
+            // Set popular destinations
+            if (popularResponse.data.success) {
+                setPopularDestinations(popularResponse.data.destinations || []);
+            }
+
+        } catch (error) {
+            console.error('Error fetching dashboard data:', error);
+            // Set default stats if API fails
+            setStats({
+                totalTrips: 0,
+                upcomingTrips: 0,
+                destinationsVisited: 0,
+                totalBudget: 0
+            });
+        } finally {
+            setLoading(false);
         }
-    ];
+    };
 
-    const popularDestinations = [
-        { name: 'Paris', country: 'France', trips: 1250 },
-        { name: 'Tokyo', country: 'Japan', trips: 980 },
-        { name: 'New York', country: 'USA', trips: 1100 },
-        { name: 'Bali', country: 'Indonesia', trips: 850 }
-    ];
+    const statsDisplay = stats ? [
+        { label: 'Total Trips', value: stats.totalTrips.toString(), icon: Map, color: 'primary' },
+        { label: 'Destinations', value: stats.destinationsVisited.toString(), icon: MapPin, color: 'secondary' },
+        { label: 'Total Budget', value: `$${(stats.totalBudget / 1000).toFixed(1)}K`, icon: DollarSign, color: 'accent' },
+        { label: 'Upcoming', value: stats.upcomingTrips.toString(), icon: Calendar, color: 'success' }
+    ] : [];
 
-    const stats = [
-        { label: 'Total Trips', value: '12', icon: Map, color: 'primary' },
-        { label: 'Countries Visited', value: '8', icon: MapPin, color: 'secondary' },
-        { label: 'Total Budget', value: '$15.2K', icon: DollarSign, color: 'accent' },
-        { label: 'Upcoming', value: '2', icon: Calendar, color: 'success' }
-    ];
+    if (loading) {
+        return (
+            <div className="dashboard-container">
+                <div className="loading-state">
+                    <div className="spinner"></div>
+                    <p>Loading your dashboard...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="dashboard-container">
@@ -67,7 +110,7 @@ const Dashboard = () => {
 
             {/* Stats Grid */}
             <div className="stats-grid animate-fadeInUp">
-                {stats.map((stat, index) => (
+                {statsDisplay.map((stat, index) => (
                     <Card key={index} className="stat-card">
                         <div className={`stat-icon stat-icon-${stat.color}`}>
                             <stat.icon size={24} />
@@ -92,15 +135,19 @@ const Dashboard = () => {
                 {upcomingTrips.length > 0 ? (
                     <div className="trips-grid">
                         {upcomingTrips.map((trip) => (
-                            <Card key={trip.id} className="trip-card">
+                            <Card key={trip._id} className="trip-card">
                                 <div className="trip-image-placeholder">
-                                    <Map size={48} />
+                                    {trip.coverImage ? (
+                                        <img src={`http://localhost:5000${trip.coverImage}`} alt={trip.name} />
+                                    ) : (
+                                        <Map size={48} />
+                                    )}
                                 </div>
                                 <div className="trip-info">
                                     <h3 className="trip-name">{trip.name}</h3>
                                     <p className="trip-destination">
                                         <MapPin size={16} />
-                                        {trip.destination}
+                                        {trip.destinations?.join(', ') || 'No destinations'}
                                     </p>
                                     <div className="trip-meta">
                                         <span className="trip-dates">
@@ -113,7 +160,7 @@ const Dashboard = () => {
                                         </span>
                                     </div>
                                 </div>
-                                <Link to={`/trips/${trip.id}`}>
+                                <Link to={`/trips/${trip._id}`}>
                                     <Button variant="secondary" size="small" className="trip-action">
                                         View Details
                                     </Button>

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
-import { Mail, Lock, User as UserIcon, Globe } from 'lucide-react';
+import { Mail, Lock, User as UserIcon, Globe, Phone } from 'lucide-react';
 import './Auth.css';
 
 const Signup = () => {
@@ -11,6 +11,7 @@ const Signup = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [contactNumber, setContactNumber] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const { signup } = useAuth();
@@ -36,7 +37,7 @@ const Signup = () => {
         }
 
         setLoading(true);
-        const result = await signup(name, email, password);
+        const result = await signup(name, email, password, contactNumber);
         setLoading(false);
 
         if (result.success) {
@@ -85,6 +86,15 @@ const Signup = () => {
                             onChange={(e) => setEmail(e.target.value)}
                             icon={Mail}
                             required
+                        />
+
+                        <Input
+                            type="tel"
+                            label="Contact Number"
+                            placeholder="Enter your phone number"
+                            value={contactNumber}
+                            onChange={(e) => setContactNumber(e.target.value)}
+                            icon={Phone}
                         />
 
                         <Input
